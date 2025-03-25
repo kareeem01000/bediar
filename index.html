@@ -6,6 +6,8 @@
     <title>شركة مصر للفوسفات</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/ar.js"></script>
     <style>
         :root {
             --primary: #003366;
@@ -175,53 +177,108 @@
             margin-bottom: 10px;
         }
 
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-top: 50px;
-        }
-
-        .contact-info {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-
-        .map-container {
-            overflow: hidden;
+        .hours-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 2rem;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            color: white;
+            position: relative;
+            overflow: hidden;
         }
 
-        .map-container iframe {
+        .hours-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            min-height: 450px;
+            background: url('pattern.svg');
+            opacity: 0.1;
+            pointer-events: none;
         }
 
-        .day-time {
+        .hours-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .current-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.open {
+            background: #00ff88;
+        }
+
+        .status-indicator.closed {
+            background: #ff4444;
+        }
+
+        .hours-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .hour-item {
             display: flex;
             justify-content: space-between;
-            padding: 15px;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
-        }
-
-        .status {
-            padding: 5px 10px;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
             border-radius: 15px;
-            font-size: 14px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .hour-item.current {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.02);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .day-name {
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .status.open {
-            background: rgba(0,204,153,0.1);
-            color: var(--accent);
+        .time-range {
+            font-size: 0.9rem;
+            opacity: 0.9;
         }
 
-        .status.closed {
-            background: rgba(220,53,69,0.1);
-            color: #dc3545;
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         .footer {
@@ -410,16 +467,63 @@
                             <p><i class="fas fa-envelope"></i> info@phosphatemisr.com</p>
                         </div>
                     </div>
-                    <div class="card">
-                        <div class="card-content">
+                    <div class="card hours-section">
+                        <div class="hours-header">
                             <h3>ساعات العمل</h3>
-                            <div class="day-time">
-                                <span>الأحد - الخميس</span>
-                                <span class="status open">8:30 ص - 4:30 م</span>
+                            <div class="current-status">
+                                <span class="status-indicator"></span>
+                                <span class="status-text">جاري التحديث...</span>
                             </div>
-                            <div class="day-time">
-                                <span>الجمعة - السبت</span>
-                                <span class="status closed">مغلق</span>
+                        </div>
+                        <div class="hours-grid">
+                            <div class="hour-item" data-day="0">
+                                <span class="day-name">
+                                    <i class="far fa-calendar-day"></i>
+                                    الأحد
+                                </span>
+                                <span class="time-range">8:30 ص - 4:30 م</span>
+                            </div>
+                            <div class="hour-item" data-day="1">
+                                <span class="day-name">
+                                    <i class="far fa-calendar-day"></i>
+                                    الإثنين
+                                </span>
+                                <span class="time-range">8:30 ص - 4:30 م</span>
+                            </div>
+                            <div class="hour-item" data-day="2">
+                                <span class="day-name">
+                                    <i class="far fa-calendar-day"></i>
+                                    الثلاثاء
+                                </span>
+                                <span class="time-range">8:30 ص - 4:30 م</span>
+                            </div>
+                            <div class="hour-item" data-day="3">
+                                <span class="day-name">
+                                    <i class="far fa-calendar-day"></i>
+                                    الأربعاء
+                                </span>
+                                <span class="time-range">8:30 ص - 4:30 م</span>
+                            </div>
+                            <div class="hour-item" data-day="4">
+                                <span class="day-name">
+                                    <i class="far fa-calendar-day"></i>
+                                    الخميس
+                                </span>
+                                <span class="time-range">8:30 ص - 4:30 م</span>
+                            </div>
+                            <div class="hour-item" data-day="5">
+                                <span class="day-name">
+                                    <i class="far fa-calendar-day"></i>
+                                    الجمعة
+                                </span>
+                                <span class="time-range">مغلق</span>
+                            </div>
+                            <div class="hour-item" data-day="6">
+                                <span class="day-name">
+                                    <i class="far fa-calendar-day"></i>
+                                    السبت
+                                </span>
+                                <span class="time-range">مغلق</span>
                             </div>
                         </div>
                     </div>
@@ -518,6 +622,58 @@
                 }
             });
         });
+
+        function updateWorkingHours() {
+            moment.locale('ar');
+            const now = moment();
+            const currentDay = now.day();
+            const currentTime = now.format('HH:mm');
+            
+            const openTime = '08:30';
+            const closeTime = '16:30';
+            
+            document.querySelectorAll('.hour-item').forEach(item => {
+                item.classList.remove('current');
+                if(parseInt(item.dataset.day) === currentDay) {
+                    item.classList.add('current');
+                }
+            });
+            
+            const isWeekend = currentDay === 5 || currentDay === 6;
+            const isWithinHours = currentTime >= openTime && currentTime < closeTime;
+            const isOpen = !isWeekend && isWithinHours;
+            
+            const statusIndicator = document.querySelector('.status-indicator');
+            const statusText = document.querySelector('.status-text');
+            
+            statusIndicator.className = 'status-indicator ' + (isOpen ? 'open' : 'closed');
+            statusText.textContent = isOpen ? 'مفتوح الآن' : 'مغلق الآن';
+            
+            if(!isOpen) {
+                let nextOpenDay = currentDay;
+                let nextOpenMessage = '';
+                
+                if(currentTime >= closeTime) {
+                    nextOpenDay = (currentDay + 1) % 7;
+                }
+                
+                while(nextOpenDay === 5 || nextOpenDay === 6) {
+                    nextOpenDay = (nextOpenDay + 1) % 7;
+                }
+                
+                const nextOpenDate = moment().day(nextOpenDay).format('dddd');
+                if(nextOpenDay === currentDay) {
+                    nextOpenMessage = `يفتح اليوم في ${openTime}`;
+                } else {
+                    nextOpenMessage = `يفتح ${nextOpenDate} في ${openTime}`;
+                }
+                
+                statusText.textContent = nextOpenMessage;
+            }
+        }
+
+        updateWorkingHours();
+        setInterval(updateWorkingHours, 60000);
     </script>
 </body>
 </html>
